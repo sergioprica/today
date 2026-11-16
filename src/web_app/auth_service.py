@@ -139,7 +139,8 @@ def authenticate(email: str, password: str, otp_code: str) -> dict | None:
                     locked_until = CASE
                         WHEN failed_login_attempts + 1 >= %(max)s
                             THEN CURRENT_TIMESTAMP + make_interval(mins => %(mins)s)
-                        ELSE locked_until END
+                        ELSE locked_until END,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE user_id = %(id)s
                 """,
                 {"max": MAX_FAILED_LOGINS, "mins": LOCKOUT_MINUTES, "id": user["user_id"]},
@@ -148,7 +149,8 @@ def authenticate(email: str, password: str, otp_code: str) -> dict | None:
 
         connection.execute(
             """
-            UPDATE users SET failed_login_attempts = 0, locked_until = NULL
+            UPDATE users SET failed_login_attempts = 0, locked_until = NULL,
+                updated_at = CURRENT_TIMESTAMP
             WHERE user_id = %s
               AND (failed_login_attempts <> 0 OR locked_until IS NOT NULL)
             """,
