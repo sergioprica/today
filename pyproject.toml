@@ -8,6 +8,7 @@ dependencies = [
     "argon2-cffi>=25.1.0",
     "cryptography>=50.0.2",
     "psycopg[binary]>=3.3.9",
+    "pyotp>=2.9.0",
     "qrcode[pil]>=8.2",
     "requests==2.33.0",
     "streamlit>=1.66.1",
@@ -16,6 +17,7 @@ dependencies = [
 [project.scripts]
 web-app = "web_app:main"
 generate-key = "web_app.config:main"
+manage-admin = "web_app.admin_cli:main"
 
 [build-system]
 requires = ["uv_build>=0.13.5,<0.14.0"]
